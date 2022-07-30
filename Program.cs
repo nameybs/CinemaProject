@@ -1,3 +1,7 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Log4Net.AspNetCore;
+using CinemaProject.Common;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +13,12 @@ builder.Services.AddSession(options => {
     options.Cookie.Name = "CinemaProject"; 
     options.IdleTimeout = TimeSpan.FromHours(1);
 });
+
+// Log4net
+builder.Logging.AddLog4Net();
+
+// Read initConfig
+Config.ReadInitConfig();
 
 var app = builder.Build();
 
