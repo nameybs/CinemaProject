@@ -18,25 +18,25 @@ public class DBCommander : IDisposable
     // Postgres DB Command Object           
     private NpgsqlCommand cmd;
     // External Transaction           
-    private DBTransaction? tran; 
+    private DBTransaction? externalTran; 
     
     /// <summary>
     /// Create Object
     /// </summary>
     public DBCommander()
     {
-        if (conn == null) conn = new NpgsqlConnection(Const.DB_CONFIG);
+        if (conn == null) conn = new NpgsqlConnection(Const.INIT_CONFIG?[Const.DB_CONFIG]);
         if (cmd == null) cmd = new NpgsqlCommand();
     }
 
     /// <summary>
     /// Create Object(Transaction)
     /// </summary>
-    /// <param name="tran">Transaction</param>
-    public DBCommander(DBTransaction tran)
+    /// <param name="externalTran">Transaction</param>
+    public DBCommander(DBTransaction externalTran)
     {
-        this.tran = tran;
-        conn = tran.GetConnection();
+        this.externalTran = externalTran;
+        conn = externalTran.GetConnection();
         if (cmd == null) cmd = new NpgsqlCommand();
     }
     
@@ -165,7 +165,7 @@ public class DBCommander : IDisposable
         {
             if (dr != null) dr.Dispose();
             if (cmd != null) cmd.Dispose();
-            if (conn != null && tran == null) conn.Close();
+            if (conn != null && externalTran == null) conn.Close();
         }
 
         return list;
@@ -210,7 +210,7 @@ public class DBCommander : IDisposable
             cmd.CommandText = sql;
             cmd.Connection = conn;
             
-            if (tran == null)
+            if (externalTran == null)
             {
                 if(conn?.State == ConnectionState.Closed) conn.Open();
                 localTran = conn?.BeginTransaction();
@@ -232,7 +232,7 @@ public class DBCommander : IDisposable
         finally
         {
             if (cmd != null) cmd.Dispose();
-            if (conn != null && tran == null) conn.Close();
+            if (conn != null && externalTran == null) conn.Close();
         }
 
         return result;
@@ -283,7 +283,7 @@ public class DBCommander : IDisposable
         finally
         {
             if (cmd != null) cmd.Dispose();
-            if (conn != null && tran == null) conn.Close();
+            if (conn != null && externalTran == null) conn.Close();
         }
 
         return result;
@@ -319,6 +319,6 @@ public class DBCommander : IDisposable
     public void Dispose()
     {
         if (cmd != null) cmd.Dispose();
-        if (conn != null && tran == null) conn.Close();
+        if (conn != null && externalTran == null) conn.Close();
     }
 }

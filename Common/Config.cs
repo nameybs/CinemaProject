@@ -1,6 +1,6 @@
 using log4net;
 ///-----------------------------------------------------------------
-///   Namespace     : Common
+///   Namespace     : CinemaProject.Common
 ///   Class         : Config
 ///   Description   : Read InitConfig
 ///   Author        : YOON                    
@@ -22,13 +22,16 @@ public static class Config
             using(StreamReader file = new StreamReader(Const.INIT_CONFIG_PATH))
             {
                 String? line;
+                Const.INIT_CONFIG = new Dictionary<string, string>();
                 while((line = file.ReadLine()) != null)  
                 {
                     if(String.IsNullOrEmpty(line)) continue;
                     if(line.StartsWith("#")) continue;
 
-                    // DB Config
-                    if(line.StartsWith("DBCONFIG")) Const.DB_CONFIG = line.Split("==")[1].Trim();
+                    String[] item = line.Split("==");
+                    String key = item[0].Trim();
+                    String value = item[1].Trim();
+                    Const.INIT_CONFIG.Add(key, value);;
                 }
             }
             logger.Info("===== End Read InitConfig =====");

@@ -13,17 +13,15 @@ namespace CinemaProject.Controllers;
 public class BaseController : Controller
 {
     private ServiceFactory? serviceFactory;
-    private log4net.ILog? logger;
+    private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(BaseController));
+
+    public BaseController()
+    {
+    }
     
     protected internal T GetService<T>()
     {
         if (serviceFactory == null) serviceFactory = new ServiceFactory();
         return serviceFactory.GetService<T>();
-    }
-
-    protected internal log4net.ILog GetLog<T>()
-    {
-        if (logger == null) logger = LogManager.GetLogger(typeof(T));
-        return logger;
     }
 }

@@ -13,6 +13,16 @@ public class HomeController : BaseController
 
     public IActionResult Index()
     {
+        return View();
+    }
+    
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    public IActionResult Test()
+    {
         logger.Info("Logtest");
         IHomeService service = GetService<IHomeService>();
         IList<Test>? list = null;
@@ -20,7 +30,7 @@ public class HomeController : BaseController
         int count = 0;
 
         Test test = new Test();
-        //test.name = "TESTUSER";
+        test.name = "TESTUSER";
         test.age = 20;
         test.birth = new DateTime(2022, 07, 30);
 
@@ -85,11 +95,6 @@ public class HomeController : BaseController
         count = service.multipleDeleteTest(list2);
         logger.Info("MULTIPLE DELETE COUNT : " + count);
 
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
         return View();
     }
 

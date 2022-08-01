@@ -1,5 +1,5 @@
 ///-----------------------------------------------------------------
-///   Namespace     : Common.Const
+///   Namespace     : CinemaProject.Common
 ///   Class         : Const
 ///   Description   : Const
 ///   Author        : YOON                    
@@ -18,5 +18,6 @@ public static class Const
     public const String REGEX_DEPTNO = @"[0-9]{4}";
     public const String REGEX_DEPTNAME = @".{1,100}";
 
-    public static String DB_CONFIG = String.Empty;
+    public static Dictionary<String, String>? INIT_CONFIG;
+    public static String DB_CONFIG = "DBCONFIG";
 }

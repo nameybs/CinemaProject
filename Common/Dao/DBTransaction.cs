@@ -20,7 +20,7 @@ public class DBTransaction : IDisposable
     /// </summary>
     public DBTransaction() 
     {
-        if (conn == null) conn = new NpgsqlConnection(Const.DB_CONFIG);
+        if (conn == null) conn = new NpgsqlConnection(Const.INIT_CONFIG?[Const.DB_CONFIG]);
         conn.Open();
         tran = conn.BeginTransaction();
     }
@@ -46,7 +46,7 @@ public class DBTransaction : IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (tran != null) tran.Dispose(); 
+        if (tran != null) tran.Dispose();
         if (conn != null) conn.Close();
     }
 
