@@ -1,4 +1,3 @@
-using CinemaProject.Models.Home;
 //-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Service.Home
 ///   Class         : IHomeService
@@ -9,12 +8,5 @@ using CinemaProject.Models.Home;
 namespace CinemaProject.Service.Home;
 public interface IHomeService
 {
-    public Test selectTest(Test test);
-    public IList<Test> multipleSelectTest();
-    public int insertTest(Test test);
-    public int multipleInsertTest(IList<Test> list);
-    public int updateTest(Test test);
-    public int deleteTest(Test test);
-    public int multipleDeleteTest(IList<Test> list);
 
 }

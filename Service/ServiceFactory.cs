@@ -1,6 +1,7 @@
 using CinemaProject.Service.Common;
 using CinemaProject.Service.Home;
 using CinemaProject.Service.User;
+using CinemaProject.Service.Test;
 ///-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Service
 ///   Class         : ServiceFactory
@@ -15,6 +16,7 @@ public class ServiceFactory
     private HomeService? homeService;
     private CommonService? commonService;
     private UserService? userService;
+    private TestService? testService;
 
     public T GetService<T>()
     {
@@ -23,6 +25,7 @@ public class ServiceFactory
         if (typeof(T).Equals(typeof(IHomeService))) resultService = GetHomeService();
         else if (typeof(T).Equals(typeof(ICommonService))) resultService = GetCommonService();
         else if (typeof(T).Equals(typeof(IUserService))) resultService = GetUserService();
+        else if (typeof(T).Equals(typeof(ITestService))) resultService = GetTestService();
         else throw new System.Exception("Service Interface Error");
 
         return resultService;
@@ -40,9 +43,15 @@ public class ServiceFactory
         return commonService;
     }
 
-        private IUserService GetUserService()
+    private IUserService GetUserService()
     {
         if (userService == null) userService = new UserService();
         return userService;
+    }
+    
+    private ITestService GetTestService()
+    {
+        if (testService == null) testService = new TestService();
+        return testService;
     }
 }

@@ -25,7 +25,7 @@ public class DBCommander : IDisposable
     /// </summary>
     public DBCommander()
     {
-        if (conn == null) conn = new NpgsqlConnection(Const.INIT_CONFIG?[Const.DB_CONFIG]);
+        if (conn == null) conn = new NpgsqlConnection(Config.GetConfigValue(Const.DB_CONFIG));
         if (cmd == null) cmd = new NpgsqlCommand();
     }
 

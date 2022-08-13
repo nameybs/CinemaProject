@@ -1,0 +1,151 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!-- bootstrap -->
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <!-- jquery -->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <!-- Layout -->
+        <script src="~/js/_Layout.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="card card-login mx-auto mt-5">
+                <div class="card-header">로그인</div>
+                <div class="card-body">
+                    <form id="loginForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <label for="UserID">ID</label>
+                            <input class="form-control" name="userid" type="text" placeholder="Enter Id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="UserPwd">Password</label>
+                            <input class="form-control" name="password" type="password" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <label class="form-check-label" class="form-check-input" >
+                                <input type="checkbox" id="idSaveCheck" /> 아이디 보존</label> 
+                                <label class="form-check-label" class="form-check-input" >                            
+                                <input type="checkbox" disabled id="pwdSaveCheck" /> 비밀번호 보존</label> 
+                            </div>
+                            <button class="btn btn-primary float-right" asp-controller="User" asp-action="Login">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function fnLogin() {
+                var formData = $('#loginForm').serialize();
+                $.ajax({
+                    url: "/Login/LoginCheck",
+                    data: formData,
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+                    type: "POST",
+                    processData: false,
+                    success: function (data) {
+                        if(data == 1) {
+                            location.replace('/Main');
+                        }else if (data == 0) {
+                            alert("IDまたはパスワードをもう一度確認してください。");
+                            location.href = '/Login';
+                        }
+                    },
+                    error: function (data) {
+                        alert(data);
+                        location.href = '/Login';
+                    }
+                });
+            }
+        </script>
+        <script>
+            /* ID, PW 입력 보존 */
+            // 쿠키 설정
+            function setCookie(cookieName, value, exdays) {
+                var exdate = new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var cookieValue = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toGMTString());
+                document.cookie = cookieName + "=" + cookieValue;
+            }
+            // 쿠키 삭제
+            function deleteCookie(cookieName) {
+                var expireDate = new Date();
+                expireDate.setDate(expireDate.getDate() - 1);
+                document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+            }
+            // 쿠키 취득
+            function getCookie(cookieName) {
+                cookieName = cookieName + '=';
+                var cookieData = document.cookie;
+                var start = cookieData.indexOf(cookieName);
+                var cookieValue = '';
+                if (start != -1) {
+                    start += cookieName.length;
+                    var end = cookieData.indexOf(';', start);
+                    if (end == -1) end = cookieData.length;
+                    cookieValue = cookieData.substring(start, end);
+                }
+                return unescape(cookieValue);
+            }
+
+            $(document).ready(function () {
+                var userInputId = getCookie("userInputId");
+                $("input[name='userid']").val(userInputId);
+
+                if ($("input[name='userid']").val() != "") {
+                    $("#idSaveCheck").attr("checked", true);
+                    $("#pwdSaveCheck").removeAttr("disabled");
+                }
+
+                $("#idSaveCheck").change(function () {
+                    if ($("#idSaveCheck").is(":checked")) {
+                        $("#pwdSaveCheck").removeAttr("disabled");
+                        $("#pwdSaveCheck").removeClass('no_act');
+                        var userInputId = $("input[name='userid']").val();
+                        setCookie("userInputId", userInputId, 365);
+                    } else {
+                        deleteCookie("userInputId");
+                        $("#pwdSaveCheck").attr("checked", false);
+                        deleteCookie("userInputPwd");
+                        $("#pwdSaveCheck").attr("disabled", true);
+                        $("#pwdSaveCheck").addClass('no_act');
+                    }
+                });
+                $("input[name='userid']").keyup(function () {
+                    if ($("#idSaveCheck").is(":checked")) {
+                        var userInputId = $("input[name='userid']").val();
+                        setCookie("userInputId", userInputId, 365);
+                    }
+                });
+                var userInputPwd = getCookie("userInputPwd");
+                $("input[name='password']").val(userInputPwd);
+
+                if ($("input[name='password']").val() != "") {
+                    $("#pwdSaveCheck").attr("checked", true);
+                    $("#pwdSaveCheck").removeClass('no_act');
+                }
+                $("#pwdSaveCheck").change(function () {
+                    if ($("#pwdSaveCheck").is(":checked")) {
+                        var userInputPwd = $("input[name='password']").val();
+                        setCookie("userInputPwd", userInputPwd, 365);
+                    } else {
+                        deleteCookie("userInputPwd");
+                    }
+                });
+                $("input[name='password']").keyup(function () {
+                    if ($("#pwdSaveCheck").is(":checked")) {
+                        var userInputPwd = $("input[name='password']").val();
+                        setCookie("userInputPwd", userInputPwd, 365);
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

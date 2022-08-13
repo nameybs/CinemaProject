@@ -1,3 +1,4 @@
+using System.Text;
 using log4net;
 ///-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Common
@@ -11,6 +12,7 @@ namespace CinemaProject.Common;
 public static class Config
 {
     private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(Config));
+    public static Dictionary<String, String>? INIT_CONFIG;
 
     /// <summary>
     /// Read IninConfig
@@ -19,10 +21,10 @@ public static class Config
         try
         {
             logger.Info("===== Start Read InitConfig =====");
-            using(StreamReader file = new StreamReader(Const.INIT_CONFIG_PATH))
+            using(StreamReader file = new StreamReader(Const.INIT_CONFIG_PATH, Encoding.GetEncoding("utf-8")))
             {
                 String? line;
-                Const.INIT_CONFIG = new Dictionary<string, string>();
+                INIT_CONFIG = new Dictionary<string, string>();
                 while((line = file.ReadLine()) != null)  
                 {
                     if(String.IsNullOrEmpty(line)) continue;
@@ -31,7 +33,10 @@ public static class Config
                     String[] item = line.Split("==");
                     String key = item[0].Trim();
                     String value = item[1].Trim();
-                    Const.INIT_CONFIG.Add(key, value);;
+                    if(!INIT_CONFIG.ContainsKey(item[0]))
+                    {
+                        INIT_CONFIG.Add(key, value);
+                    }
                 }
             }
             logger.Info("===== End Read InitConfig =====");
@@ -41,5 +46,23 @@ public static class Config
             logger.Info("===== Fail Read InitConfig =====");
             throw;
         }
+    }
+
+    /// <summary>
+    /// Get ConfigValue
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public static string GetConfigValue(string key) {
+
+        string value = string.Empty;
+        if(INIT_CONFIG != null)
+        {
+            if(INIT_CONFIG[key] != null)
+            {
+                value = INIT_CONFIG[key];
+            }
+        }
+        return value;
     }
 }

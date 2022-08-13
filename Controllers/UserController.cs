@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 ///-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Controllers
 ///   Class         : UserController
@@ -13,5 +10,9 @@ namespace CinemaProject.Controllers;
 
 public class UserController : BaseController
 {
+    public IActionResult Login()
+    {
+        return View();
+    }
     
 }
