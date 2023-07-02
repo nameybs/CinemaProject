@@ -1,11 +1,12 @@
-using Npgsql;
 ///-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Common.Dao
 ///   Class         : DBTransaction
-///   Description   : DBTransactionProcess
+///   Description   : 외부 트랜잭션처리 클래스
 ///   Author        : YOON             
 ///   Update Date   : 2022-07-26
 ///-----------------------------------------------------------------
+using Npgsql;
+
 namespace CinemaProject.Common.Dao;
 
 public class DBTransaction : IDisposable
@@ -53,7 +54,7 @@ public class DBTransaction : IDisposable
     /// <summary>
     ///  connection object
     /// </summary>
-    /// <returns>connection object</returns>
+    /// <returns></returns>
     internal NpgsqlConnection GetConnection()
     {
         return conn;

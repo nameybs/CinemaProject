@@ -1,7 +1,13 @@
-﻿using System.Diagnostics;
+﻿///-----------------------------------------------------------------
+///   Namespace     : CinemaProject.Controller
+///   Class         : HomeController
+///   Description   : 기본 컨트롤러
+///   Author        : YOON                
+///   Update Date   : 2022-07-27
+///-----------------------------------------------------------------
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CinemaProject.Models;
-using CinemaProject.Common;
 using log4net;
 
 namespace CinemaProject.Controllers;

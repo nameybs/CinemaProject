@@ -1,27 +1,28 @@
-using CinemaProject.Service;
-using Microsoft.AspNetCore.Mvc;
-using log4net;
 ///-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Controller
 ///   Class         : BaseController
-///   Description   : 
+///   Description   : 공통 모듈 컨트롤러
 ///   Author        : YOON                
 ///   Update Date   : 2022-07-27
 ///-----------------------------------------------------------------
+using CinemaProject.Service;
+using Microsoft.AspNetCore.Mvc;
+using log4net;
+
 namespace CinemaProject.Controllers;
 
 public class BaseController : Controller
 {
-    private ServiceFactory? serviceFactory;
+    private BaseService? baseService;
     private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(BaseController));
 
-    public BaseController()
+    protected BaseController()
     {
     }
-    
-    protected internal T GetService<T>()
+
+    internal T GetService<T>()
     {
-        if (serviceFactory == null) serviceFactory = new ServiceFactory();
-        return serviceFactory.GetService<T>();
+        if (baseService == null) baseService = new BaseService();
+        return baseService.GetService<T>();
     }
 }

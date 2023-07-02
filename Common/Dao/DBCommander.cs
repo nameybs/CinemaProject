@@ -1,14 +1,15 @@
+///-----------------------------------------------------------------
+///   Namespace     : CinemaProject.Common.Dao
+///   Class         : DBCommander
+///   Description   : DB연결 및 실행 클래스
+///   Author        : YOON                    
+///   Update Date   : 2022-07-26
+///-----------------------------------------------------------------
 using System.Reflection;
 using System.Data;
 using System.Collections;
 using Npgsql;
-///-----------------------------------------------------------------
-///   Namespace     : CinemaProject.Common.Dao
-///   Class         : DBCommander
-///   Description   : DBConnect・SQLCommand
-///   Author        : YOON                    
-///   Update Date   : 2022-07-26
-///-----------------------------------------------------------------
+
 namespace CinemaProject.Common.Dao;
 
 public class DBCommander : IDisposable
@@ -21,7 +22,7 @@ public class DBCommander : IDisposable
     private DBTransaction? externalTran; 
     
     /// <summary>
-    /// Create Object
+    /// 커넥션 풀 생성
     /// </summary>
     public DBCommander()
     {
@@ -30,7 +31,7 @@ public class DBCommander : IDisposable
     }
 
     /// <summary>
-    /// Create Object(Transaction)
+    /// 커넥션 풀 생성(외부 트랜잭션 사용)
     /// </summary>
     /// <param name="externalTran">Transaction</param>
     public DBCommander(DBTransaction externalTran)
@@ -41,20 +42,20 @@ public class DBCommander : IDisposable
     }
     
     /// <summary>
-    /// Add Parameter(key , value)
+    /// 파라미터 추가(key , value)
     /// </summary>
-    /// <param name="key">キー</param>
-    /// <param name="value">値</param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
     public void AddParameter(string key, object value)
     {
         cmd.Parameters.Add(new NpgsqlParameter(key, value));
     }
     
     /// <summary>
-    /// Add Parameter(Object<T>)
+    /// 파라미터 추가(Object<T>)
     /// </summary>
-    /// <param name="key">キー</param>
-    /// <param name="value">値</param>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
     public void AddParameter<T>(T param)
     {
         Type resultObjectType = typeof(T);
@@ -72,21 +73,21 @@ public class DBCommander : IDisposable
     }
     
     /// <summary>
-    /// SELECT Process(Key, Value)
+    /// SELECT문 설정(Key, Value)
     /// </summary>
-    /// <param name="sql">sql</param>
-    /// <returns>Execute Result</returns>
+    /// <param name="sql"></param>
+    /// <returns></returns>
     public IList<Dictionary<string, object>> ExecuteReader(string sql)
     {
-        return ExecuteReader<Dictionary<string, object>>(sql);
+       return ExecuteReader<Dictionary<string, object>>(sql);
     }
     
     /// <summary>
-    /// SELECT Process(Object<T>)
+    /// SELECT문실행(Object<T>)
     /// </summary>
     /// <typeparam name="T">Object<T></typeparam>
-    /// <param name="sql">sql</param>
-    /// <returns>Execute Result</returns>
+    /// <param name="sql"></param>
+    /// <returns></returns>
     public IList<T> ExecuteReader<T>(string sql)
     {
         Type resultObjectType = typeof(T);
@@ -172,10 +173,10 @@ public class DBCommander : IDisposable
     }
     
     /// <summary>
-    /// CheckObjectPrimitiveDataType
+    /// 자료형 타입 체크
     /// </summary>
-    /// <param name="resultObjectType">PrimitiveDataType</param>
-    /// <returns>Check Result</returns>
+    /// <param name="resultObjectType"></param>
+    /// <returns></returns>
     private bool CheckObjectPrimitiveDataType(Type resultObjectType)
     {
         if (resultObjectType == typeof(bool)) return true;
@@ -197,10 +198,10 @@ public class DBCommander : IDisposable
     }
     
     /// <summary>
-    /// 「Insert, Update, Delete」
+    /// Insert, Update, Delete문 실행
     /// </summary>
-    /// <param name="sql">sql</param>
-    /// <returns>Process Count</returns>
+    /// <param name="sql"></param>
+    /// <returns></returns>
     public int ExecuteNonQuery(string sql)
     {
         int result = -1;
@@ -239,12 +240,12 @@ public class DBCommander : IDisposable
     }
 
     /// <summary>
-    /// 「Insert, Update, Delete」
+    /// Insert, Update, Delete문 파라미터 설정
     /// </summary>
-    /// <typeparam name="T">Object<T></typeparam>
-    /// <param name="sql">sql</param>
-    /// <param name="param">param</param>
-    /// <returns>Process Count</returns>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="sql"></param>
+    /// <param name="param"></param>
+    /// <returns></returns>
     public int ExecuteNonQuery<T>(string sql, T param)
     {
         Type resultObjectType = typeof(T);
@@ -258,15 +259,15 @@ public class DBCommander : IDisposable
                 cmd.Parameters.Add(new NpgsqlParameter(prop.Name, prop.GetValue(param)));
             }
         }
-
+        // SQL실행
         return ExecuteNonQuery(sql);
     }
     
     /// <summary>
-    /// SELECT(Scalar)
+    /// SELECT문 실행(Scalar)
     /// </summary>
-    /// <param name="sql">sql</param>
-    /// <returns>first Row</returns>
+    /// <param name="sql"></param>
+    /// <returns></returns>
     public Object? ExecuteScalar(string sql)
     {
         Object? result;
@@ -290,11 +291,11 @@ public class DBCommander : IDisposable
     }
 
     /// <summary>
-    /// SELECT(Scalar) 
+    /// SELECT문 설정(Scalar) 
     /// </summary>
-    /// <typeparam name="T">Object<T></typeparam>
-    /// <param name="sql">sql</param>
-    /// <param name="param">param</param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="sql"></param>
+    /// <param name="param"></param>
     /// <returns></returns>
     public Object? ExecuteScalar<T>(string sql, T param)
     {
@@ -314,7 +315,7 @@ public class DBCommander : IDisposable
     }
 
     /// <summary>
-    /// Dispose Object
+    /// 자원 해제
     /// </summary>
     public void Dispose()
     {

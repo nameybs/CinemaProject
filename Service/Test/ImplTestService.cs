@@ -14,28 +14,56 @@ public class TestService : ITestService
     public TestModel selectTest(TestModel test)
     {
         IList<TestModel>? result = null;
-            using(DBCommander cmd = new DBCommander())
+        using(DBCommander cmd = new DBCommander())
+        {
+            try
             {
-                try
-                {
-                    string sql = @"SELECT ID
-                                    , NAME
-                                    , AGE
-                                    , BIRTH
-                                    , REGDT
-                                    , UPTDT
-                                    FROM TEST_TABLE
-                                    WHERE id = :id
-                                    ORDER BY ID";
-                    
-                    cmd.AddParameter("id", test.id);
-                    result = cmd.ExecuteReader<TestModel>(sql);
-                }
-                catch(Exception) 
-                {
-                    throw;
-                }
+                string sql = @"SELECT ID
+                                , NAME
+                                , AGE
+                                , BIRTH
+                                , REGDT
+                                , UPTDT
+                                FROM TEST_TABLE
+                                WHERE id = :id
+                                ORDER BY ID";
+                
+                cmd.AddParameter("id", test.id);
+                result = cmd.ExecuteReader<TestModel>(sql);
             }
+            catch(Exception) 
+            {
+                throw;
+            }
+        }
+        return result[0];
+    }
+
+    public Dictionary<string,object> selectTest(Dictionary<string,object> test)
+    {
+        IList<Dictionary<string,object>>? result = null;
+        using(DBCommander cmd = new DBCommander())
+        {
+            try
+            {
+                string sql = @"SELECT ID
+                                , NAME
+                                , AGE
+                                , BIRTH
+                                , REGDT
+                                , UPTDT
+                                FROM TEST_TABLE
+                                WHERE id = :id
+                                ORDER BY ID";
+                
+                cmd.AddParameter("id", test["id"]);
+                result = cmd.ExecuteReader(sql);
+            }
+            catch(Exception) 
+            {
+                throw;
+            }
+        }
         return result[0];
     }
 

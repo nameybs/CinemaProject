@@ -1,6 +1,11 @@
-﻿using System.Diagnostics;
+﻿///-----------------------------------------------------------------
+///   Namespace     : CinemaProject.Controller
+///   Class         : TestController
+///   Description   : 테스트 컨트롤러
+///   Author        : YOON                
+///   Update Date   : 2022-07-27
+///-----------------------------------------------------------------
 using Microsoft.AspNetCore.Mvc;
-using CinemaProject.Models;
 using CinemaProject.Models.Test;
 using CinemaProject.Service.Test;
 using log4net;
@@ -17,6 +22,7 @@ public class TestController : BaseController
         ITestService service = GetService<ITestService>();
         IList<TestModel>? list = null;
         TestModel result;
+        Dictionary<string, object> dicResult;
         int count = 0;
 
         TestModel test = new TestModel();
@@ -27,7 +33,7 @@ public class TestController : BaseController
         logger.Info("INSERT DATA");
         count = service.insertTest(test);
         logger.Info("INSERT COUNT : " + count);
-        
+
         logger.Info("MULTIPLE SELECT DATA");
         list = service.multipleSelectTest();
         logger.Info("MULTIPLE SELECT COUNT : " + list.Count);
@@ -36,6 +42,19 @@ public class TestController : BaseController
             logger.Info(string.Format("ID : {0}, NAME : {1} , AGE : {2}, BIRTH : {3}",
                         item.id, item.name, item.age, item.birth.ToShortDateString()));
         }
+
+        logger.Info("SELECT DATA(Object)");
+        result = service.selectTest(list[0]);
+        logger.Info(string.Format("OBJECT RESULT : ID : {0}, NAME : {1} , AGE : {2}, BIRTH : {3}",
+                    result.id, result.name, result.age, result.birth.ToShortDateString()));
+
+        Dictionary<string, object> dicParam = new Dictionary<string, object>();
+        dicParam.Add("id", list[0].id);
+        logger.Info("SELECT DATA(Dictionary)");
+        dicResult = service.selectTest(dicParam);
+        logger.Info(string.Format("DIC RESULT : ID : {0}, NAME : {1} , AGE : {2}, BIRTH : {3}",
+                    dicResult["id"], dicResult["name"], dicResult["age"], dicResult["birth"]));
+
         test = list[list.Count - 1];
         test.name = "TESTUSER2";
         test.age = 30;

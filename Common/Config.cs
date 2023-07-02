@@ -1,12 +1,13 @@
-using System.Text;
-using log4net;
 ///-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Common
 ///   Class         : Config
-///   Description   : Read InitConfig
+///   Description   : Init파일 취득 클래스
 ///   Author        : YOON                    
 ///   Update Date   : 2022-07-26
 ///-----------------------------------------------------------------
+using System.Text;
+using log4net;
+
 namespace CinemaProject.Common;
 
 public static class Config
@@ -15,7 +16,7 @@ public static class Config
     public static Dictionary<String, String>? INIT_CONFIG;
 
     /// <summary>
-    /// Read IninConfig
+    /// Init파일 정보 취득
     /// </summary>
     public static void ReadInitConfig() {
         try
@@ -49,7 +50,7 @@ public static class Config
     }
 
     /// <summary>
-    /// Get ConfigValue
+    /// Config값 취득
     /// </summary>
     /// <param name="key"></param>
     /// <returns></returns>

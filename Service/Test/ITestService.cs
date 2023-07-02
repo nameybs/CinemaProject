@@ -10,6 +10,7 @@ namespace CinemaProject.Service.Test;
 public interface ITestService
 {
     public TestModel selectTest(TestModel test);
+    public Dictionary<string,object> selectTest(Dictionary<string,object> test);
     public IList<TestModel> multipleSelectTest();
     public int insertTest(TestModel test);
     public int multipleInsertTest(IList<TestModel> list);
