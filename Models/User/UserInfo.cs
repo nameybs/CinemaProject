@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 ///   Class         : UserInfo
 ///   Description   : UserInfo
 ///   Author        : YOON                    
-///   Update Date   : 2022-08-01
+///   Update Date   : 2024-01-06
 ///-----------------------------------------------------------------
 namespace CinemaProject.Models.User;
 
 public class UserInfo
 {
-    
+    public String userId {get; set;} = String.Empty;
+    public String userPassword {get; set;} = String.Empty;
 }
 

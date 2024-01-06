@@ -1,151 +1,94 @@
 @{
     ViewData["Title"] = "Login";
-    Layout = null;
 }
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <!-- bootstrap -->
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <!-- jquery -->
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <!-- Layout -->
-        <script src="~/js/_Layout.js"></script>
-    </head>
-    <body>
-        <div class="container">
-            <div class="card card-login mx-auto mt-5">
-                <div class="card-header">로그인</div>
-                <div class="card-body">
-                    <form id="loginForm" onsubmit="return false;">
-                        <div class="form-group">
-                            <label for="UserID">ID</label>
-                            <input class="form-control" name="userid" type="text" placeholder="Enter Id" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="UserPwd">Password</label>
-                            <input class="form-control" name="password" type="password" placeholder="Password" required>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <label class="form-check-label" class="form-check-input" >
-                                <input type="checkbox" id="idSaveCheck" /> 아이디 보존</label> 
-                                <label class="form-check-label" class="form-check-input" >                            
-                                <input type="checkbox" disabled id="pwdSaveCheck" /> 비밀번호 보존</label> 
-                            </div>
-                            <button class="btn btn-primary float-right" asp-controller="User" asp-action="Login">Login</button>
-                        </div>
-                    </form>
+<div id="login-div" class="mx-auto mt-5">
+    <form id="LoginForm" class="needs-validation" method="post" novalidate>
+        <!-- 아이디 입력 -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="UserId">아이디</label>
+            <input type="text" id="userId" class="form-control" name="userId" placeholder="Enter ID" required />
+            <div class="invalid-feedback">아이디를 입력해주세요.</div>
+        </div>
+        <!-- 비밀번호 입력 -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="UserPassword">비밀번호</label>
+            <input type="password" id="userPassword" class="form-control" name="userPassword" placeholder="Enter Password" required />
+            <div class="invalid-feedback">비밀번호를 입력해주세요.</div>
+        </div>
+        <!-- 입력정보 저장 -->
+        <div class="row mb-4">
+            <div class="col d-flex justify-content-center">
+                <div>
+                    <input type="checkbox" id="saveId" checked />
+                    <label for="saveId"> 아이디 저장 </label>
                 </div>
             </div>
+            <div class="col">
+                <!-- 비밀번호 찾기 -->
+                <a href="#!">비밀번호 찾기</a>
+            </div>
         </div>
-        <script type="text/javascript">
-            function fnLogin() {
-                var formData = $('#loginForm').serialize();
-                $.ajax({
-                    url: "/Login/LoginCheck",
-                    data: formData,
-                    contentType: "application/x-www-form-urlencoded",
-                    dataType: "json",
-                    type: "POST",
-                    processData: false,
-                    success: function (data) {
-                        if(data == 1) {
-                            location.replace('/Main');
-                        }else if (data == 0) {
-                            alert("ID또는 비밀번호를 확인 해 주세요.");
-                            location.href = '/Login';
-                        }
-                    },
-                    error: function (data) {
-                        alert(data);
-                        location.href = '/Login';
-                    }
-                });
-            }
-        </script>
-        <script>
-            /* ID, PW 입력 보존 */
-            // 쿠키 설정
-            function setCookie(cookieName, value, exdays) {
-                var exdate = new Date();
-                exdate.setDate(exdate.getDate() + exdays);
-                var cookieValue = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toGMTString());
-                document.cookie = cookieName + "=" + cookieValue;
-            }
-            // 쿠키 삭제
-            function deleteCookie(cookieName) {
-                var expireDate = new Date();
-                expireDate.setDate(expireDate.getDate() - 1);
-                document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
-            }
-            // 쿠키 취득
-            function getCookie(cookieName) {
-                cookieName = cookieName + '=';
-                var cookieData = document.cookie;
-                var start = cookieData.indexOf(cookieName);
-                var cookieValue = '';
-                if (start != -1) {
-                    start += cookieName.length;
-                    var end = cookieData.indexOf(';', start);
-                    if (end == -1) end = cookieData.length;
-                    cookieValue = cookieData.substring(start, end);
-                }
-                return unescape(cookieValue);
-            }
+        <!-- 로그인 버튼 -->
+        <div class="d-grid col-12 mx-auto mb-4">
+            <button type="submit" id="loginSubmit" class="btn btn-primary">로그인</button>
+        </div>
+    </form>
+    <!-- 회원가입 버튼 -->
+    <div class="text-center">
+        <p>아직 회원이 아니세요? <a href="/User/SignUp"> 회원가입</a></p>
+    </div>
+</div>
+<!-- Script Area -->
+<script src="~/js/Common/validate.js"></script>
+<script src="~/js/Common/cookieControl.js"></script>
+<script>
+    // 초기화 처리
+    $(document).ready(function(){
+        $("#userId").val(getCookie("userID"));
+    });
 
-            $(document).ready(function () {
-                var userInputId = getCookie("userInputId");
-                $("input[name='userid']").val(userInputId);
+    $('#loginSubmit').on('click', function(event) {
+        // 입력체크
+        if(validate()) return;
 
-                if ($("input[name='userid']").val() != "") {
-                    $("#idSaveCheck").attr("checked", true);
-                    $("#pwdSaveCheck").removeAttr("disabled");
-                }
-
-                $("#idSaveCheck").change(function () {
-                    if ($("#idSaveCheck").is(":checked")) {
-                        $("#pwdSaveCheck").removeAttr("disabled");
-                        $("#pwdSaveCheck").removeClass('no_act');
-                        var userInputId = $("input[name='userid']").val();
-                        setCookie("userInputId", userInputId, 365);
+        // 로그인 처리
+        $.ajax({
+            url: "/User/LoginCheck",
+            data: $('#loginForm').serialize(),
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            type: "POST",
+            processData: false,
+            success: function (data) {
+                // 정상처리
+                if (data == 1) {
+                    // 아이디 저장 여부 확인
+                    if($('#saveId').is(':checked')) {
+                        // 쿠키 설정(아이디를 7일동안 보관)
+                        setCookie("userID", $("#userId").val(), 7);
                     } else {
-                        deleteCookie("userInputId");
-                        $("#pwdSaveCheck").attr("checked", false);
-                        deleteCookie("userInputPwd");
-                        $("#pwdSaveCheck").attr("disabled", true);
-                        $("#pwdSaveCheck").addClass('no_act');
+                        // 쿠키삭제
+                        deleteCookie("userID");
                     }
-                });
-                $("input[name='userid']").keyup(function () {
-                    if ($("#idSaveCheck").is(":checked")) {
-                        var userInputId = $("input[name='userid']").val();
-                        setCookie("userInputId", userInputId, 365);
-                    }
-                });
-                var userInputPwd = getCookie("userInputPwd");
-                $("input[name='password']").val(userInputPwd);
-
-                if ($("input[name='password']").val() != "") {
-                    $("#pwdSaveCheck").attr("checked", true);
-                    $("#pwdSaveCheck").removeClass('no_act');
+                    location.replace('/Home');
+                } else if (data == 0) {
+                    alert("ID또는 비밀번호를 확인 해 주세요.");
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-                $("#pwdSaveCheck").change(function () {
-                    if ($("#pwdSaveCheck").is(":checked")) {
-                        var userInputPwd = $("input[name='password']").val();
-                        setCookie("userInputPwd", userInputPwd, 365);
-                    } else {
-                        deleteCookie("userInputPwd");
-                    }
-                });
-                $("input[name='password']").keyup(function () {
-                    if ($("#pwdSaveCheck").is(":checked")) {
-                        var userInputPwd = $("input[name='password']").val();
-                        setCookie("userInputPwd", userInputPwd, 365);
-                    }
-                });
-            });
-        </script>
-    </body>
-</html>
+            },
+            error: function (data) {
+                alert(data);
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });
+    });
+</script>
+<!-- CSS Area -->
+<style>
+    #login-div {
+        max-width: 25rem;
+        margin: auto;
+    }
+</style>
