@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CinemaProject.Models.User;
 //-----------------------------------------------------------------
 ///   Namespace     : CinemaProject.Service.UserService
 ///   Class         : IUserService
@@ -13,5 +10,5 @@ namespace CinemaProject.Service.User;
 
 public interface IUserService
 {
-    
+    public IList<UserInfo> getUser(UserInfo userInfo);
 }
