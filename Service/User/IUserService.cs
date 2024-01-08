@@ -11,4 +11,8 @@ namespace CinemaProject.Service.User;
 public interface IUserService
 {
     public IList<UserInfo> getUser(UserInfo userInfo);
+
+    public int getEmailCount(String email);
+
+    public int emailVerify(String email);
 }

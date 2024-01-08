@@ -1,0 +1,98 @@
+@{
+    ViewData["Title"] = "Sign Up";
+}
+<div class="mx-auto mt-5">
+    <div id="signup-nav" class="nav nav-tabs">
+        <li id="nav-list" class="nav-item">
+            <a id="nav-text" class="nav-link active" aria-current="page" aria-disabled="true">본인인증</a>
+        </li>
+        <li id="nav-list" class="nav-item">
+            <a id="nav-text" class="nav-link disabled" tabindex="-1" aria-disabled="true">약관동의</a>
+        </li>
+        <li id="nav-list" class="nav-item">
+            <a id="nav-text" class="nav-link disabled" tabindex="-1" aria-disabled="true">정보입력</a>
+        </li>
+        <li id="nav-list" class="nav-item">
+            <a id="nav-text" class="nav-link disabled" tabindex="-1" aria-disabled="true">가입완료</a>
+        </li>
+    </div>
+    <br /><br />
+    <div id="signup-div">
+        <p class="page-info-txt">
+            <strong>회원가입을 위한 본인인증 단계입니다.</strong>
+            <br />
+            <span>이메일을 입력한 후에 인증 버튼을 눌러주세요.</span>
+        </p>
+        <form id="ConfirmEmailForm" action="/User/TermsConditions" class="needs-validation" method="post" novalidate>
+            <div class="form-group">
+                <label for="UserEmail">Email</label>
+                <input class="form-control" name="email" type="email" placeholder="Enter Email" required>
+                <div class="invalid-feedback">메일주소를 확인해주세요.</div>
+            </div>
+            <br />
+            <div class="d-grid col-12 mx-auto mb-4">
+                <button type="submit" id="emailVerifySubmit" class="btn btn-primary">인증</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Script Area -->
+<script src="~/js/Common/validate.js"></script>
+<script>
+    $('#emailVerifySubmit').on('click', function(event) {
+        // 입력체크
+        if(!$('.needs-validation')[0].checkValidity()) {
+            $('.needs-validation')[0].classList.add('was-validated');
+        } else {
+            // 로그인 처리
+            $.ajax({
+                url: "/User/EmailCheck",
+                data: $('#ConfirmEmailForm').serialize(),
+                contentType: "application/x-www-form-urlencoded",
+                dataType: "json",
+                type: "POST",
+                processData: false,
+                success: function (data) {
+                    // 정상처리
+                    if (data == 0) {
+                        $('ConfirmEmailForm').submit();
+                    } else if (data == 1) {
+                        alert("이메일을 확인 해 주세요.");
+                    } else if (data == 2) {
+                        alert("이미 등록된 이메일 입니다.");
+                    } else if (data == 3) {
+                        alert("메일 송신 처리 중 에러가 발생했습니다.");
+                    }
+                },
+                error: function (data) {
+                    alert("알수없는 에러가 발생했습니다.");
+                }
+            });
+        }
+    });
+</script>
+<!-- CSS Area -->
+<style>
+    #signup-div {
+        max-width: 25rem;
+        margin: auto;
+    }
+
+    #signup-nav {
+        max-width: 25rem;
+        margin: auto;
+    }
+
+    #nav-list {
+        min-width: 5rem;
+        margin: auto;
+    }
+
+    #nav-text {
+        text-align: center;
+    }
+
+    .nav-link.active {
+        font-weight: bold;
+    }
+</style>

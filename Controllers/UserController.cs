@@ -6,10 +6,6 @@
 ///   Update Date   : 2024-01-06
 ///-----------------------------------------------------------------
 using Microsoft.AspNetCore.Mvc;
-using MailKit.Net.Smtp;
-using MailKit;
-using MimeKit;
-using MailKit.Security;
 using CinemaProject.Models.User;
 using CinemaProject.Service.User;
 
@@ -33,7 +29,7 @@ public class UserController : BaseController
     public RedirectResult Logout()
     {
         // 로그인 세션 삭제
-        HttpContext.Session.Remove("user_num");
+        this.CurrentUser = null;
 
         return Redirect("/Home");
     }
@@ -57,9 +53,27 @@ public class UserController : BaseController
         if(resultInfo.Count == 0 || resultInfo.Count > 1) return Json(2);
         
         // 세션에 유저 정보 추가
-        HttpContext.Session.SetString("user_num", resultInfo[0].user_num);
+        this.CurrentUser = resultInfo[0];
 
         return Json(0);
+    }
+
+    /// <summary>
+    /// ConfirmEmail
+    /// </summary>
+    /// <returns></returns>
+    public IActionResult ConfirmEmail()
+    {
+        return View();
+    }
+
+    /// <summary>
+    /// Terms Conditions
+    /// </summary>
+    /// <returns></returns>
+    public IActionResult TermsConditions()
+    {
+        return View();
     }
 
     /// <summary>
@@ -76,25 +90,25 @@ public class UserController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult EmailVerify()
+    public JsonResult EmailCheck(String email)
     {
-        var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse("nameybs@gmail.com"));
-        email.To.Add(MailboxAddress.Parse("nameybs@gmail.com"));
-        email.Subject = "Test Email";
-        email.Body = new TextPart(MimeKit.Text.TextFormat.Html) 
-        {
-            Text = "test"
-        };
+        if(email == null || email == String.Empty) return Json(1);
 
-        using (var smtp = new SmtpClient()) {
-            smtp.Connect("smtp.gmail.com", 587, false);
-            smtp.Authenticate("nameybs@gmail.com", "rnzoodfqbcnwqhlr");
-            smtp.Send(email);
-            smtp.Disconnect(true);
+        IUserService userService = GetService<IUserService>();
+        if(userService.getEmailCount(email) != 0)
+        {
+            return Json(2);
         }
 
-        return View();
+        int value = userService.emailVerify(email);
+        if(value == 0)
+        {
+            return Json(3);
+        }
+        else
+        {
+            HttpContext.Session.SetInt32("mailVerify", value);
+        }
+        return Json(0);
     }
-    
 }
