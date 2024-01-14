@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Sign Up";
+    ViewData["Title"] = "ConfirmEmail";
 }
 <div class="mx-auto mt-5">
     <div id="signup-nav" class="nav nav-tabs">
@@ -21,9 +21,9 @@
         <p class="page-info-txt">
             <strong>회원가입을 위한 본인인증 단계입니다.</strong>
             <br />
-            <span>이메일을 입력한 후에 인증 버튼을 눌러주세요.</span>
+            <span>이메일을 입력한 후에 전송 버튼을 눌러주세요.</span>
         </p>
-        <form id="ConfirmEmailForm" action="/User/TermsConditions" class="needs-validation" method="post" novalidate>
+        <form id="ConfirmEmailForm" action="/User/EmailVerify" class="needs-validation" method="post" novalidate>
             <div class="form-group">
                 <label for="UserEmail">Email</label>
                 <input class="form-control" name="email" type="email" placeholder="Enter Email" required>
@@ -31,22 +31,21 @@
             </div>
             <br />
             <div class="d-grid col-12 mx-auto mb-4">
-                <button type="submit" id="emailVerifySubmit" class="btn btn-primary">인증</button>
+                <button type="button" id="sendEmailSubmit" class="btn btn-primary">전송</button>
             </div>
         </form>
     </div>
 </div>
 <!-- Script Area -->
-<script src="~/js/Common/validate.js"></script>
 <script>
-    $('#emailVerifySubmit').on('click', function(event) {
+    $('#sendEmailSubmit').on('click', function(event) {
         // 입력체크
         if(!$('.needs-validation')[0].checkValidity()) {
             $('.needs-validation')[0].classList.add('was-validated');
         } else {
             // 로그인 처리
             $.ajax({
-                url: "/User/EmailCheck",
+                url: "/User/SendEmail",
                 data: $('#ConfirmEmailForm').serialize(),
                 contentType: "application/x-www-form-urlencoded",
                 dataType: "json",
@@ -55,7 +54,7 @@
                 success: function (data) {
                     // 정상처리
                     if (data == 0) {
-                        $('ConfirmEmailForm').submit();
+                        $('#ConfirmEmailForm').submit();
                     } else if (data == 1) {
                         alert("이메일을 확인 해 주세요.");
                     } else if (data == 2) {

@@ -14,7 +14,7 @@ namespace CinemaProject.Controllers;
 
 public class BaseController : Controller
 {
-    private BaseService? baseService;
+    private BaseService baseService;
     private static readonly log4net.ILog logger = LogManager.GetLogger(typeof(BaseController));
 
     protected BaseController()

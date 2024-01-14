@@ -74,13 +74,13 @@ public class UserService : IUserService
         return result;
     }
 
-    public int emailVerify(string email)
+    public string emailVerify(string email)
     {
-        int value = 0;
+        int result = 0;
         try
         {
             Random random = new Random();
-            value = random.Next(1000, 9999);
+            result = random.Next(1000, 9999);
 
             using(MimeMessage mimeMsg = new MimeMessage())
             {
@@ -92,7 +92,7 @@ public class UserService : IUserService
                     Text = string.Format(@"<p>아래의 인증번호를 확인 해 주세요</p>
                             <B>{0}</B>
                             <p>인증코드는 5분 이내로 입력 해 주세요.</p>
-                            ", value)
+                            ", result)
                 };
 
                 using(SmtpClient smtp = new SmtpClient())
@@ -117,6 +117,6 @@ public class UserService : IUserService
         {
             throw;
         }
-        return value;
+        return result.ToString();
     }
 }

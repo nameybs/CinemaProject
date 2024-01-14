@@ -14,5 +14,5 @@ public interface IUserService
 
     public int getEmailCount(String email);
 
-    public int emailVerify(String email);
+    public string emailVerify(String email);
 }

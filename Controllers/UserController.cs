@@ -68,6 +68,58 @@ public class UserController : BaseController
     }
 
     /// <summary>
+    /// SendEmail
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    public JsonResult SendEmail(String email)
+    {
+        if(email == null || email == String.Empty) return Json(1);
+
+        IUserService userService = GetService<IUserService>();
+        if(userService.getEmailCount(email) != 0)
+        {
+            return Json(2);
+        }
+
+        string value = userService.emailVerify(email);
+        if(0.Equals(value))
+        {
+            return Json(3);
+        }
+        else
+        {
+            HttpContext.Session.SetString("mailVerify", value);
+        }
+        return Json(0);
+    }
+
+    /// <summary>
+    /// EmailVerify
+    /// </summary>
+    /// <returns></returns>
+    public IActionResult EmailVerify()
+    {
+        return View();
+    }
+
+    /// <summary>
+    /// EmailCheck
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost]
+    public JsonResult EmailCheck(String verifyNum)
+    {
+        if(verifyNum == null || verifyNum == String.Empty) return Json(1);
+        if(verifyNum.Equals(HttpContext.Session.GetString("mailVerify")))
+        {
+            return Json(0);
+        }
+        
+        return Json(2);
+    }
+
+    /// <summary>
     /// Terms Conditions
     /// </summary>
     /// <returns></returns>
@@ -83,32 +135,5 @@ public class UserController : BaseController
     public IActionResult SignUp()
     {
         return View();
-    }
-
-    /// <summary>
-    /// EmailVerify
-    /// </summary>
-    /// <returns></returns>
-    [HttpPost]
-    public JsonResult EmailCheck(String email)
-    {
-        if(email == null || email == String.Empty) return Json(1);
-
-        IUserService userService = GetService<IUserService>();
-        if(userService.getEmailCount(email) != 0)
-        {
-            return Json(2);
-        }
-
-        int value = userService.emailVerify(email);
-        if(value == 0)
-        {
-            return Json(3);
-        }
-        else
-        {
-            HttpContext.Session.SetInt32("mailVerify", value);
-        }
-        return Json(0);
     }
 }
