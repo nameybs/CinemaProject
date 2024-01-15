@@ -18,6 +18,13 @@ public static class Const
     /// Init Config Const
     /// </summary>
     public static String DB_CONFIG = "DBCONFIG";
+
+    /// <summary>
+    /// File Property Path
+    /// </summary>
+    public static String FILE_PROP_PATH = "FileProp";
+
+    public static String TERMS_CONDIRIONS_TEXT = "TermsConditions.txt";
     
     /// <summary>
     /// RegEx Const

@@ -23,69 +23,50 @@
             <br />
             <span>이용 약관동의 항목에 체크 후에 다음 버튼을 눌러주세요.</span>
         </p>
-        <form id="SignUpForm" class="needs-validation" method="post" novalidate>
+        <form id="TermsConditionsForm" action="/User/SignUp" class="needs-validation" method="post" novalidate>
             <div class="form-group">
-                <label for="UserEmail">Email</label>
-                <input class="form-control" name="email" type="email" placeholder="Enter Email" required>
-                <div class="invalid-feedback">메일주소를 확인해주세요.</div>
+                <label for="TermsConditions">이용약관</label>
+                <textarea class="form-control" id="TermsConditions" rows="5">@CinemaProject.Common.CommonUtil.GetTextFromFile(
+                    CinemaProject.Common.Const.FILE_PROP_PATH 
+                    + "/" 
+                    + CinemaProject.Common.Const.TERMS_CONDIRIONS_TEXT)</textarea>
+            </div>
+            <div class="row mb-4">
+                <div class="col d-flex">
+                    <div>
+                        <input type="checkbox" class="form-check-input" id="Agree" required />
+                        <label for="Agree"> 이용약관 동의 </label>
+                        <div class="invalid-feedback">이용약관에 체크해주세요.</div>
+                    </div>
+                </div>
             </div>
             <br />
             <div class="d-grid col-12 mx-auto mb-4">
-                <button type="submit" id="emailVerifySubmit" class="btn btn-primary">인증</button>
+                <button type="button" id="TermsConditionsFormSubmit" class="btn btn-primary">회원가입</button>
             </div>
         </form>
     </div>
 </div>
 <!-- Script Area -->
-<script src="~/js/Common/validate.js"></script>
 <script>
-    $('#LoginSubmit').on('click', function(event) {
+    $('#TermsConditionsFormSubmit').on('click', function(event) {
         // 입력체크
         if(!$('.needs-validation')[0].checkValidity()) {
             $('.needs-validation')[0].classList.add('was-validated');
         } else {
-            // 로그인 처리
-            $.ajax({
-                url: "/User/LoginCheck",
-                data: $('#LoginForm').serialize(),
-                contentType: "application/x-www-form-urlencoded",
-                dataType: "json",
-                type: "POST",
-                processData: false,
-                success: function (data) {
-                    // 정상처리
-                    if (data == 0) {
-                        // 아이디 저장 여부 확인
-                        if($('#SaveId').is(':checked')) {
-                            // 쿠키 설정(아이디를 7일동안 보관)
-                            setCookie("userID", $("#UserId").val(), 7);
-                        } else {
-                            // 쿠키삭제
-                            deleteCookie("userID");
-                        }
-                        location.replace('/Home');
-                    } else if (data == 1) {
-                        alert("ID또는 비밀번호를 확인 해 주세요.");
-                    } else if (data == 2) {
-                        alert("존재하지 않는 유저입니다.");
-                    }
-                },
-                error: function (data) {
-                    alert("알수없는 에러가 발생했습니다.");
-                }
-            });
+            $('#TermsConditionsForm').submit();
         }
     });
 </script>
 <!-- CSS Area -->
 <style>
     #signup-div {
-        max-width: 25rem;
+        max-width: 40rem;
         margin: auto;
     }
 
     #signup-nav {
-        max-width: 25rem;
+        max-width: 40rem;
         margin: auto;
     }
 

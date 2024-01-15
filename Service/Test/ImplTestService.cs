@@ -13,7 +13,7 @@ public class TestService : ITestService
 {
     public TestModel selectTest(TestModel test)
     {
-        IList<TestModel>? result = null;
+        IList<TestModel> result = null;
         using(DBCommander cmd = new DBCommander())
         {
             try
@@ -41,7 +41,7 @@ public class TestService : ITestService
 
     public Dictionary<string,object> selectTest(Dictionary<string,object> test)
     {
-        IList<Dictionary<string,object>>? result = null;
+        IList<Dictionary<string,object>> result = null;
         using(DBCommander cmd = new DBCommander())
         {
             try
@@ -69,7 +69,7 @@ public class TestService : ITestService
 
     public IList<TestModel> multipleSelectTest()
     {
-        IList<TestModel>? result = null;
+        IList<TestModel> result = null;
 
         using(DBCommander cmd = new DBCommander())
         {

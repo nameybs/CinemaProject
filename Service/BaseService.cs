@@ -13,10 +13,10 @@ namespace CinemaProject.Service;
 
 public class BaseService
 {
-    private HomeService? homeService;
-    private CommonService? commonService;
-    private UserService? userService;
-    private TestService? testService;
+    private HomeService homeService;
+    private CommonService commonService;
+    private UserService userService;
+    private TestService testService;
 
     public T GetService<T>()
     {
