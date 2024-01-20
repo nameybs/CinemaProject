@@ -31,14 +31,14 @@
             </div>
             <br />
             <div class="d-grid col-12 mx-auto mb-4">
-                <button type="button" id="sendEmailSubmit" class="btn btn-primary">전송</button>
+                <button type="button" id="SendEmailSubmit" class="btn btn-primary">전송</button>
             </div>
         </form>
     </div>
 </div>
 <!-- Script Area -->
 <script>
-    $('#sendEmailSubmit').on('click', function(event) {
+    $('#SendEmailSubmit').on('click', function(event) {
         // 입력체크
         if(!$('.needs-validation')[0].checkValidity()) {
             $('.needs-validation')[0].classList.add('was-validated');
